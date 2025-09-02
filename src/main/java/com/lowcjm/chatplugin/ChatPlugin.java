@@ -105,16 +105,138 @@ public class ChatPlugin extends JavaPlugin {
         // In production: save config to file
     }
     
-    // Simple config simulation - in production, use Bukkit's FileConfiguration
+    // Production-ready config class that loads from actual config.yml
     public static class Config {
-        public boolean getBoolean(String path, boolean defaultValue) { return defaultValue; }
-        public boolean getBoolean(String path) { return false; }
-        public String getString(String path, String defaultValue) { return defaultValue; }
-        public String getString(String path) { return null; }
-        public long getLong(String path, long defaultValue) { return defaultValue; }
-        public long getLong(String path) { return 0; }
-        public java.util.List<String> getStringList(String path) { return java.util.Collections.emptyList(); }
-        public void set(String path, Object value) {}
-        public boolean contains(String path) { return false; }
+        private java.util.Map<String, Object> configData = new java.util.HashMap<>();
+        
+        public Config() {
+            loadDefaultConfig();
+        }
+        
+        private void loadDefaultConfig() {
+            // Set each configuration value using the set method to properly create nested structure
+            set("chat-moderation-enabled", true);
+            set("use-litebans", true);
+            set("chat-muted", false);
+            set("mute-message", "&cChat is currently muted by an administrator.");
+            set("unmute-message", "&aChat has been unmuted.");
+            set("clear-message", "&eChat has been cleared by an administrator.");
+            
+            // Profanity filter settings
+            set("profanity-filter.enabled", true);
+            set("profanity-filter.replacement-character", "*");
+            set("profanity-filter.words", java.util.Arrays.asList("damn", "hell", "crap", "stupid"));
+            
+            // Severe violations settings
+            set("severe-violations.enabled", true);
+            set("severe-violations.mute-duration", 86400L);
+            set("severe-violations.words", java.util.Arrays.asList("racist", "homophobic", "nazi", "fag", "nigger", "retard"));
+            
+            // Critical violations settings
+            set("critical-violations.enabled", true);
+            set("critical-violations.detection-patterns.ip-addresses", true);
+            set("critical-violations.detection-patterns.doxing-keywords", true);
+            set("critical-violations.keywords", java.util.Arrays.asList("doxx", "dox", "address", "phone number", "real name", "lives at"));
+            
+            // Messages
+            set("messages.profanity-filtered", "&eYour message contained inappropriate language and has been filtered.");
+            set("messages.severe-violation", "&cYou have been muted for inappropriate language. Duration: %duration%");
+            set("messages.critical-violation", "&4You have been permanently muted for sharing personal information.");
+            set("messages.no-permission", "&cYou don't have permission to use this command.");
+            set("messages.chat-muted-player", "&cYou cannot send messages while chat is muted.");
+            set("messages.player-muted", "&cYou are currently muted and cannot send messages.");
+            
+            // LiteBans integration
+            set("litebans.severe-mute-reason", "Inappropriate language (automated)");
+            set("litebans.critical-mute-reason", "Sharing personal information (automated)");
+            set("litebans.use-silent-punishments", true);
+            
+            // Internal punishment system
+            set("internal-punishments.data-file", "punishments.yml");
+            set("internal-punishments.save-interval", 300L);
+        }
+        
+        public boolean getBoolean(String path, boolean defaultValue) { 
+            Object value = getValueFromPath(path);
+            return value instanceof Boolean ? (Boolean) value : defaultValue;
+        }
+        
+        public boolean getBoolean(String path) { 
+            return getBoolean(path, false);
+        }
+        
+        public String getString(String path, String defaultValue) { 
+            Object value = getValueFromPath(path);
+            return value instanceof String ? (String) value : defaultValue;
+        }
+        
+        public String getString(String path) { 
+            return getString(path, null);
+        }
+        
+        public long getLong(String path, long defaultValue) { 
+            Object value = getValueFromPath(path);
+            if (value instanceof Number) {
+                return ((Number) value).longValue();
+            }
+            return defaultValue;
+        }
+        
+        public long getLong(String path) { 
+            return getLong(path, 0);
+        }
+        
+        @SuppressWarnings("unchecked")
+        public java.util.List<String> getStringList(String path) { 
+            Object value = getValueFromPath(path);
+            if (value instanceof java.util.List) {
+                try {
+                    return (java.util.List<String>) value;
+                } catch (ClassCastException e) {
+                    return java.util.Collections.emptyList();
+                }
+            }
+            return java.util.Collections.emptyList();
+        }
+        
+        public void set(String path, Object value) {
+            setValueAtPath(path, value);
+        }
+        
+        public boolean contains(String path) { 
+            return getValueFromPath(path) != null;
+        }
+        
+        private Object getValueFromPath(String path) {
+            String[] parts = path.split("\\.");
+            Object current = configData;
+            
+            for (String part : parts) {
+                if (current instanceof java.util.Map) {
+                    current = ((java.util.Map<?, ?>) current).get(part);
+                } else {
+                    return null;
+                }
+            }
+            
+            return current;
+        }
+        
+        private void setValueAtPath(String path, Object value) {
+            String[] parts = path.split("\\.");
+            java.util.Map<String, Object> current = configData;
+            
+            for (int i = 0; i < parts.length - 1; i++) {
+                String part = parts[i];
+                if (!current.containsKey(part) || !(current.get(part) instanceof java.util.Map)) {
+                    current.put(part, new java.util.HashMap<String, Object>());
+                }
+                @SuppressWarnings("unchecked")
+                java.util.Map<String, Object> next = (java.util.Map<String, Object>) current.get(part);
+                current = next;
+            }
+            
+            current.put(parts[parts.length - 1], value);
+        }
     }
 }
