@@ -1,0 +1,30 @@
+{
+  "rules": {
+    "profanity_filter": {
+      "enabled": false,
+      "action": "warn"
+    },
+    "spam_detection": {
+      "enabled": true,
+      "action": "mute"
+    },
+    "rate_limiting": {
+      "enabled": true,
+      "max_messages_per_minute": 5
+    },
+    "caps_abuse": {
+      "enabled": true,
+      "max_caps_percentage": 50
+    }
+  },
+  "whitelist": {
+    "enabled": true,
+    "moderator_roles": [
+      "admin",
+      "moderator"
+    ]
+  },
+  "escalation": {
+    "enabled": true
+  }
+}

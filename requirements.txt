@@ -1,0 +1,40 @@
+# Chat Moderation Plugin Requirements
+
+# Core dependencies
+dataclasses>=0.6; python_version<"3.7"
+typing-extensions>=3.7.4; python_version<"3.8"
+
+# Optional dependencies for different integrations
+# Uncomment as needed:
+
+# For Discord integration
+# discord.py>=2.0.0
+
+# For Slack integration  
+# slack-sdk>=3.0.0
+
+# For web API/REST interface
+# flask>=2.0.0
+# fastapi>=0.68.0
+# uvicorn>=0.15.0
+
+# For advanced text processing
+# nltk>=3.6
+# spacy>=3.4.0
+
+# For database storage (optional)
+# sqlalchemy>=1.4.0
+# sqlite3  # Built into Python
+
+# For Redis caching (optional)
+# redis>=4.0.0
+
+# For configuration validation
+# pydantic>=1.8.0
+
+# For testing
+# pytest>=6.0.0
+# pytest-asyncio>=0.15.0
+
+# For logging enhancements
+# python-json-logger>=2.0.0
