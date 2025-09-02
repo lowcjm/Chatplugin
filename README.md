@@ -8,11 +8,18 @@ A comprehensive chat moderation plugin for Minecraft 1.21+ servers with advanced
 - `/mutechat` - Mute or unmute global chat
 - `/clearchat` - Clear chat history for all players
 - `/chatmoderation` - Toggle moderation system on/off
+- `/describeimage` - Manually describe an image from URL
 
 ### Advanced Content Filtering
 - **Profanity Filter**: Automatically replaces inappropriate words with asterisks (`****`)
 - **Severe Violations**: Detects racist, homophobic, and other offensive language → Temporary mutes
 - **Critical Violations**: Detects IP addresses and doxing attempts → Permanent mutes
+
+### Image Description System
+- **Automatic Detection**: Recognizes image URLs in chat messages (jpg, png, gif, webp, svg, etc.)
+- **Smart Descriptions**: Generates contextual descriptions based on URL patterns and content
+- **Manual Command**: `/describeimage <url>` command for on-demand image analysis
+- **Integration**: Works seamlessly with existing chat filtering and moderation
 
 ### Punishment System
 - **LiteBans Integration**: Primary punishment system when available
@@ -114,6 +121,7 @@ critical-violations:
 | `/mutechat [mute\|unmute\|status]` | `chatplugin.mutechat` | Control global chat muting |
 | `/clearchat` | `chatplugin.clearchat` | Clear chat for all players |
 | `/chatmoderation [on\|off\|status\|reload]` | `chatplugin.toggle` | Manage moderation system |
+| `/describeimage <image_url>` | `chatplugin.describe` | Manually describe an image from URL |
 
 ### Command Examples
 
@@ -138,6 +146,9 @@ critical-violations:
 
 # Reload configuration
 /chatmoderation reload
+
+# Describe an image
+/describeimage https://example.com/photo.jpg
 ```
 
 ## Permissions
@@ -149,6 +160,7 @@ critical-violations:
 | `chatplugin.clearchat` | Use clear chat command | `op` |
 | `chatplugin.toggle` | Toggle moderation system | `op` |
 | `chatplugin.bypass` | Bypass chat restrictions | `op` |
+| `chatplugin.describe` | Use image description command | `true` |
 
 ## How It Works
 
@@ -157,7 +169,8 @@ critical-violations:
 2. **Global Mute Check**: Block if chat is globally muted
 3. **Individual Mute Check**: Block if player is individually muted
 4. **Content Filtering**: Analyze message content
-5. **Action Execution**: Filter, warn, or punish based on content
+5. **Image Detection**: Check for image URLs and generate descriptions
+6. **Action Execution**: Filter, warn, or punish based on content
 
 ### Violation Levels
 - **Profanity**: Message filtered with `****`, player warned
@@ -183,6 +196,8 @@ This demonstrates:
 - Message filtering
 - Violation detection
 - Punishment application
+- Image URL detection and description
+- Manual image description commands
 
 ## Customization
 
@@ -201,6 +216,12 @@ severe-violations:
 critical-violations:
   keywords:
     - "critical-keyword-here"
+
+# Image Description Settings
+image-description:
+  enabled: true
+  replace-with-description: false  # true to replace URLs, false to append descriptions
+  notify-player: true              # notify player when image is described
 ```
 
 ### Adjusting Mute Durations
@@ -217,6 +238,40 @@ messages:
   profanity-filtered: "&eYour message was filtered."
   severe-violation: "&cYou have been muted for %duration%"
   critical-violation: "&4You have been permanently muted."
+  image-described: "&7[Image described: %description%]"
+```
+
+## Image Description Feature
+
+The plugin automatically detects image URLs in chat messages and provides intelligent descriptions. This helps improve accessibility and context for all players.
+
+### Supported Image Formats
+- JPEG (.jpg, .jpeg)
+- PNG (.png)
+- GIF (.gif)
+- WebP (.webp)
+- SVG (.svg)
+- BMP (.bmp)
+
+### How It Works
+1. **Automatic Detection**: When a player sends a message with an image URL, the plugin automatically detects it
+2. **Smart Analysis**: The system analyzes the URL and generates contextual descriptions
+3. **Chat Integration**: Descriptions are added to the chat message or sent as notifications
+4. **Manual Command**: Players can use `/describeimage <url>` for on-demand descriptions
+
+### Configuration Options
+```yaml
+image-description:
+  enabled: true                    # Enable/disable the feature
+  replace-with-description: false  # Replace URL with description or append
+  notify-player: true              # Send description notification to player
+```
+
+### Example Usage
+```
+Player: "Check out this photo: https://example.com/sunset.jpg"
+Result: "Check out this photo: https://example.com/sunset.jpg [Image: A beautiful sunset/sunrise scene]"
+Player receives: "[Image described: A beautiful sunset/sunrise scene]"
 ```
 
 ## Development Notes

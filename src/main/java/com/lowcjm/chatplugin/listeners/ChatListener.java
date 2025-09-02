@@ -2,6 +2,7 @@ package com.lowcjm.chatplugin.listeners;
 
 import com.lowcjm.chatplugin.ChatPlugin;
 import com.lowcjm.chatplugin.managers.FilterManager;
+import com.lowcjm.chatplugin.managers.ImageDescriptionManager;
 import com.lowcjm.chatplugin.managers.ChatManager.SimulatedPlayer;
 
 /**
@@ -38,14 +39,45 @@ public class ChatListener {
         // Filter the message
         FilterManager.FilterResult result = plugin.getFilterManager().filterMessage(message);
         
+        // If the message passed filtering, check for images and add descriptions
+        String finalMessage = message;
+        if (result.getType() == FilterManager.FilterType.ALLOWED || 
+            result.getType() == FilterManager.FilterType.PROFANITY_FILTERED) {
+            
+            // Use the filtered message if profanity was filtered
+            String messageToAnalyze = result.getType() == FilterManager.FilterType.PROFANITY_FILTERED ? 
+                result.getFilteredMessage() : message;
+            
+            // Analyze for images and add descriptions
+            ImageDescriptionManager.ImageAnalysisResult imageResult = 
+                plugin.getImageDescriptionManager().analyzeMessage(messageToAnalyze);
+            
+            if (imageResult.containsImage()) {
+                finalMessage = imageResult.getProcessedMessage();
+                
+                // Notify that image was described
+                if (plugin.getConfig().getBoolean("image-description.notify-player", true)) {
+                    String notifyMessage = translateColorCodes(
+                        plugin.getConfig().getString("messages.image-described", 
+                        "&7[Image described: " + imageResult.getDescription() + "]"));
+                    player.sendMessage(notifyMessage);
+                }
+            } else {
+                finalMessage = messageToAnalyze;
+            }
+        }
+        
         switch (result.getType()) {
             case ALLOWED:
-                // Message is clean, allow it
+                // Message is clean, set the final message (potentially with image descriptions)
+                if (!finalMessage.equals(message)) {
+                    event.setMessage(finalMessage);
+                }
                 break;
                 
             case PROFANITY_FILTERED:
-                // Replace message with filtered version
-                event.setMessage(result.getFilteredMessage());
+                // Replace message with filtered version (potentially with image descriptions)
+                event.setMessage(finalMessage);
                 
                 // Notify player their message was filtered
                 String filterMessage = translateColorCodes(

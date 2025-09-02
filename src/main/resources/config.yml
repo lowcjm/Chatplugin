@@ -49,6 +49,14 @@ critical-violations:
     - "lives at"
     # Add more doxing-related keywords
 
+# Image Description Settings
+image-description:
+  enabled: true
+  # Whether to replace image URLs with descriptions or append descriptions
+  replace-with-description: false
+  # Whether to notify the player that their image was described
+  notify-player: true
+
 # Messages
 messages:
   profanity-filtered: "&eYour message contained inappropriate language and has been filtered."
@@ -57,6 +65,7 @@ messages:
   no-permission: "&cYou don't have permission to use this command."
   chat-muted-player: "&cYou cannot send messages while chat is muted."
   player-muted: "&cYou are currently muted and cannot send messages."
+  image-described: "&7[Image described: %description%]"
 
 # LiteBans Integration
 litebans:

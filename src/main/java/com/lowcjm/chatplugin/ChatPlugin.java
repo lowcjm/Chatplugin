@@ -10,6 +10,7 @@ import com.lowcjm.chatplugin.listeners.ChatListener;
 import com.lowcjm.chatplugin.managers.ChatManager;
 import com.lowcjm.chatplugin.managers.FilterManager;
 import com.lowcjm.chatplugin.managers.PunishmentManager;
+import com.lowcjm.chatplugin.managers.ImageDescriptionManager;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.logging.Logger;
@@ -21,6 +22,7 @@ public class ChatPlugin extends JavaPlugin {
     private ChatManager chatManager;
     private FilterManager filterManager;
     private PunishmentManager punishmentManager;
+    private ImageDescriptionManager imageDescriptionManager;
     private boolean liteBansAvailable = false;
     
     // Simulated configuration - in production, this would be handled by Bukkit's config system
@@ -69,6 +71,7 @@ public class ChatPlugin extends JavaPlugin {
         this.chatManager = new ChatManager(this);
         this.filterManager = new FilterManager(this);
         this.punishmentManager = new PunishmentManager(this, liteBansAvailable);
+        this.imageDescriptionManager = new ImageDescriptionManager(this);
     }
     
     public void reloadPluginConfig() {
@@ -91,6 +94,10 @@ public class ChatPlugin extends JavaPlugin {
     
     public PunishmentManager getPunishmentManager() {
         return punishmentManager;
+    }
+    
+    public ImageDescriptionManager getImageDescriptionManager() {
+        return imageDescriptionManager;
     }
     
     public boolean isLiteBansAvailable() {

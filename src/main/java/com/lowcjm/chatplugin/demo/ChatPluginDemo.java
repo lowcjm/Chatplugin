@@ -2,6 +2,7 @@ package com.lowcjm.chatplugin.demo;
 
 import com.lowcjm.chatplugin.ChatPlugin;
 import com.lowcjm.chatplugin.commands.MuteChatCommand.CommandSender;
+import com.lowcjm.chatplugin.commands.DescribeImageCommand;
 import com.lowcjm.chatplugin.listeners.ChatListener;
 import com.lowcjm.chatplugin.managers.ChatManager.SimulatedPlayer;
 import com.lowcjm.chatplugin.managers.FilterManager;
@@ -81,6 +82,30 @@ public class ChatPluginDemo {
         testChatMessage(chatListener, player1, "Can anyone hear me?");
         plugin.getChatManager().setChatMuted(false);
         
+        System.out.println("\n=== Testing Image Description Feature ===");
+        
+        // Test image URL detection and description
+        System.out.println("\n9. Testing image URL detection and description:");
+        testChatMessage(chatListener, player1, "Check out this cool cat picture: https://example.com/cat.jpg");
+        
+        System.out.println("\n10. Testing different image types:");
+        testChatMessage(chatListener, player1, "Here's a sunset photo: https://photos.example.com/sunset.png");
+        testChatMessage(chatListener, player1, "Look at this meme: https://memesite.com/funny_meme.gif");
+        testChatMessage(chatListener, player1, "Game screenshot: https://steam.com/game_screenshot.jpeg");
+        
+        System.out.println("\n11. Testing manual image description command:");
+        DescribeImageCommand describeCommand = new DescribeImageCommand(plugin);
+        AdminUser admin2 = new AdminUser("TestAdmin");
+        
+        System.out.println("   Executing: /describeimage https://example.com/dog.jpg");
+        describeCommand.onCommand(admin2, new String[]{"https://example.com/dog.jpg"});
+        
+        System.out.println("   Executing: /describeimage invalid-url");
+        describeCommand.onCommand(admin2, new String[]{"invalid-url"});
+        
+        System.out.println("\n12. Testing image description with profanity filter:");
+        testChatMessage(chatListener, player1, "This damn cat is cute: https://example.com/kitten.jpg");
+        
         System.out.println("\n=== Demo Complete ===");
         System.out.println("The plugin successfully demonstrates:");
         System.out.println("✓ Chat muting/unmuting functionality");
@@ -91,6 +116,9 @@ public class ChatPluginDemo {
         System.out.println("✓ IP address detection");
         System.out.println("✓ Doxing keyword detection");
         System.out.println("✓ LiteBans integration support (with fallback)");
+        System.out.println("✓ Image URL detection and description");
+        System.out.println("✓ Manual image description command");
+        System.out.println("✓ Image description with chat filtering integration");
         
         plugin.onDisable();
     }
@@ -111,7 +139,7 @@ public class ChatPluginDemo {
     }
     
     // Simulated admin user for testing commands
-    static class AdminUser implements CommandSender {
+    static class AdminUser implements CommandSender, DescribeImageCommand.CommandSender {
         private String name;
         
         public AdminUser(String name) {

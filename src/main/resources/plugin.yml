@@ -21,6 +21,11 @@ commands:
     usage: /chatmoderation [on|off]
     permission: chatplugin.toggle
     aliases: [cm]
+  describeimage:
+    description: Manually describe an image from URL
+    usage: /describeimage <image_url>
+    permission: chatplugin.describe
+    aliases: [di, describe]
 
 permissions:
   chatplugin.*:
@@ -30,6 +35,7 @@ permissions:
       chatplugin.clearchat: true
       chatplugin.toggle: true
       chatplugin.bypass: true
+      chatplugin.describe: true
     default: op
   chatplugin.mutechat:
     description: Allows muting and unmuting chat
@@ -43,5 +49,8 @@ permissions:
   chatplugin.bypass:
     description: Bypass chat restrictions and filters
     default: op
+  chatplugin.describe:
+    description: Allows describing images manually
+    default: true
 
 soft-depend: [LiteBans]
