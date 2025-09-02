@@ -10,12 +10,19 @@
     },
     "rate_limiting": {
       "enabled": true,
-      "max_messages_per_minute": 5
+      "max_messages_per_minute": 10
     },
     "caps_abuse": {
       "enabled": true,
-      "max_caps_percentage": 50
+      "max_caps_percentage": 70,
+      "min_message_length": 10
     }
+  },
+  "escalation": {
+    "enabled": true,
+    "warn_to_mute_threshold": 3,
+    "mute_to_kick_threshold": 2,
+    "kick_to_ban_threshold": 2
   },
   "whitelist": {
     "enabled": true,
@@ -23,8 +30,5 @@
       "admin",
       "moderator"
     ]
-  },
-  "escalation": {
-    "enabled": true
   }
 }
