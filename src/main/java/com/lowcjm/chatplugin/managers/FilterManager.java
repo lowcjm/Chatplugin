@@ -68,7 +68,9 @@ public class FilterManager {
         // Check for severe violations
         if (plugin.getConfig().getBoolean("severe-violations.enabled", true)) {
             for (String word : severeViolationWords) {
-                if (filteredMessage.contains(word.toLowerCase())) {
+                // Use word boundary matching to avoid partial matches
+                String wordPattern = "\\b" + Pattern.quote(word.toLowerCase()) + "\\b";
+                if (Pattern.compile(wordPattern, Pattern.CASE_INSENSITIVE).matcher(filteredMessage).find()) {
                     return new FilterResult(originalMessage, FilterType.SEVERE_VIOLATION, "Severe language detected: " + word);
                 }
             }
@@ -80,12 +82,14 @@ public class FilterManager {
             String processedMessage = originalMessage;
             
             for (String word : profanityWords) {
-                String wordLower = word.toLowerCase();
-                if (filteredMessage.contains(wordLower)) {
+                // Use word boundary matching to avoid partial matches
+                String wordPattern = "\\b" + Pattern.quote(word) + "\\b";
+                Pattern pattern = Pattern.compile(wordPattern, Pattern.CASE_INSENSITIVE);
+                if (pattern.matcher(processedMessage).find()) {
                     containsProfanity = true;
                     // Replace the word with asterisks
                     String replacement = replacementChar.repeat(word.length());
-                    processedMessage = processedMessage.replaceAll("(?i)" + Pattern.quote(word), replacement);
+                    processedMessage = pattern.matcher(processedMessage).replaceAll(replacement);
                 }
             }
             
