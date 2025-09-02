@@ -11,17 +11,17 @@ import com.lowcjm.chatplugin.managers.ChatManager;
 import com.lowcjm.chatplugin.managers.FilterManager;
 import com.lowcjm.chatplugin.managers.PunishmentManager;
 
+import org.bukkit.plugin.java.JavaPlugin;
 import java.util.logging.Logger;
 
-// In production, this would extend org.bukkit.plugin.java.JavaPlugin
-public class ChatPlugin {
+// Extends JavaPlugin to satisfy Bukkit plugin loading requirements
+public class ChatPlugin extends JavaPlugin {
     
     private static ChatPlugin instance;
     private ChatManager chatManager;
     private FilterManager filterManager;
     private PunishmentManager punishmentManager;
     private boolean liteBansAvailable = false;
-    private Logger logger = Logger.getLogger(ChatPlugin.class.getName());
     
     // Simulated configuration - in production, this would be handled by Bukkit's config system
     private Config config = new Config();
@@ -30,7 +30,7 @@ public class ChatPlugin {
         instance = this;
         
         // Save default config - in production: saveDefaultConfig();
-        logger.info("Loading configuration...");
+        getLogger().info("Loading configuration...");
         
         // Check for LiteBans - in production: check if LiteBans plugin is present
         checkLiteBansAvailability();
@@ -39,16 +39,16 @@ public class ChatPlugin {
         initializeManagers();
         
         // Register commands - in production: getCommand("mutechat").setExecutor(new MuteChatCommand(this));
-        logger.info("Registering commands...");
+        getLogger().info("Registering commands...");
         
         // Register listeners - in production: Bukkit.getPluginManager().registerEvents(new ChatListener(this), this);
-        logger.info("Registering event listeners...");
+        getLogger().info("Registering event listeners...");
         
-        logger.info("ChatPlugin has been enabled!");
+        getLogger().info("ChatPlugin has been enabled!");
         if (liteBansAvailable) {
-            logger.info("LiteBans integration is available and will be used for punishments.");
+            getLogger().info("LiteBans integration is available and will be used for punishments.");
         } else {
-            logger.info("LiteBans not found. Using internal punishment system.");
+            getLogger().info("LiteBans not found. Using internal punishment system.");
         }
     }
     
@@ -56,7 +56,7 @@ public class ChatPlugin {
         if (punishmentManager != null) {
             punishmentManager.savePunishments();
         }
-        logger.info("ChatPlugin has been disabled!");
+        getLogger().info("ChatPlugin has been disabled!");
     }
     
     private void checkLiteBansAvailability() {
@@ -103,10 +103,6 @@ public class ChatPlugin {
     
     public void saveConfig() {
         // In production: save config to file
-    }
-    
-    public Logger getLogger() {
-        return logger;
     }
     
     // Simple config simulation - in production, use Bukkit's FileConfiguration
