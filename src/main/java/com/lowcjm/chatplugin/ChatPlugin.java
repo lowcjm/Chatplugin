@@ -21,6 +21,7 @@ public class ChatPlugin extends JavaPlugin {
     private ChatManager chatManager;
     private FilterManager filterManager;
     private PunishmentManager punishmentManager;
+    private ChatListener chatListener;
     private boolean liteBansAvailable = false;
     
     // Simulated configuration - in production, this would be handled by Bukkit's config system
@@ -44,6 +45,9 @@ public class ChatPlugin extends JavaPlugin {
         
         // Register listeners - in production: Bukkit.getPluginManager().registerEvents(new ChatListener(this), this);
         getLogger().info("Registering event listeners...");
+        this.chatListener = new ChatListener(this);
+        // Register with the plugin manager for proper event handling
+        getPluginManager().registerEvents(chatListener, this);
         
         getLogger().info("ChatPlugin has been enabled!");
         if (liteBansAvailable) {
@@ -99,6 +103,10 @@ public class ChatPlugin extends JavaPlugin {
     
     public PunishmentManager getPunishmentManager() {
         return punishmentManager;
+    }
+    
+    public ChatListener getChatListener() {
+        return chatListener;
     }
     
     public boolean isLiteBansAvailable() {

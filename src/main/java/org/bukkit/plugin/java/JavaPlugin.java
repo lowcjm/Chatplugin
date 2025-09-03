@@ -4,15 +4,19 @@ import java.util.logging.Logger;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.event.Listener;
 
 /**
  * Minimal JavaPlugin stub for demonstration purposes.
  * In production, this would come from the Bukkit/Paper API dependency.
  */
-public abstract class JavaPlugin {
+public abstract class JavaPlugin implements Plugin {
     
     private Logger logger;
     private Map<String, PluginCommand> commands = new HashMap<>();
+    private static PluginManager pluginManager = new SimplePluginManager();
     
     public JavaPlugin() {
         this.logger = Logger.getLogger(this.getClass().getName());
@@ -53,5 +57,30 @@ public abstract class JavaPlugin {
             commands.put(name, command);
         }
         return command;
+    }
+    
+    /**
+     * Gets the plugin manager
+     * @return the plugin manager
+     */
+    public static PluginManager getPluginManager() {
+        return pluginManager;
+    }
+    
+    @Override
+    public String getName() {
+        return this.getClass().getSimpleName();
+    }
+    
+    /**
+     * Simple PluginManager implementation for demonstration
+     */
+    private static class SimplePluginManager implements PluginManager {
+        @Override
+        public void registerEvents(Listener listener, Plugin plugin) {
+            // In production, this would register the listener with the event system
+            // For demo purposes, just log the registration
+            Logger.getLogger("PluginManager").info("Registered event listener: " + listener.getClass().getSimpleName() + " for plugin: " + plugin.getName());
+        }
     }
 }
