@@ -56,7 +56,7 @@ A comprehensive chat moderation plugin for Minecraft 1.21+ servers with advanced
    ```
 
 3. **Install**:
-   - Place `chatplugin-1.0.0.jar` in your server's `plugins/` folder
+   - Place `chatplugin-1.0.1.jar` in your server's `plugins/` folder
    - Restart the server
    - Configure the plugin (see Configuration section)
 
@@ -175,7 +175,7 @@ When LiteBans is detected, the plugin:
 Run the demo to see the plugin in action:
 
 ```bash
-java -cp target/chatplugin-1.0.0.jar com.lowcjm.chatplugin.demo.ChatPluginDemo
+java -cp target/chatplugin-1.0.1.jar com.lowcjm.chatplugin.demo.ChatPluginDemo
 ```
 
 This demonstrates:
