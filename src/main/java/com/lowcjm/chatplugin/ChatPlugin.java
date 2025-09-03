@@ -38,8 +38,9 @@ public class ChatPlugin extends JavaPlugin {
         // Initialize managers
         initializeManagers();
         
-        // Register commands - in production: getCommand("mutechat").setExecutor(new MuteChatCommand(this));
+        // Register commands
         getLogger().info("Registering commands...");
+        registerCommands();
         
         // Register listeners - in production: Bukkit.getPluginManager().registerEvents(new ChatListener(this), this);
         getLogger().info("Registering event listeners...");
@@ -69,6 +70,13 @@ public class ChatPlugin extends JavaPlugin {
         this.chatManager = new ChatManager(this);
         this.filterManager = new FilterManager(this);
         this.punishmentManager = new PunishmentManager(this, liteBansAvailable);
+    }
+    
+    private void registerCommands() {
+        // Register commands with their executors
+        getCommand("mutechat").setExecutor(new MuteChatCommand(this));
+        getCommand("clearchat").setExecutor(new ClearChatCommand(this));
+        getCommand("chatmoderation").setExecutor(new ChatModerationCommand(this));
     }
     
     public void reloadPluginConfig() {

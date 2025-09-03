@@ -1,5 +1,5 @@
 name: ChatPlugin
-version: 1.0.0
+version: 1.0.1
 main: com.lowcjm.chatplugin.ChatPlugin
 api-version: 1.21
 author: lowcjm

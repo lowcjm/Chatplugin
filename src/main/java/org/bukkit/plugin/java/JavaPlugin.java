@@ -1,6 +1,9 @@
 package org.bukkit.plugin.java;
 
 import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.Map;
+import org.bukkit.command.PluginCommand;
 
 /**
  * Minimal JavaPlugin stub for demonstration purposes.
@@ -9,6 +12,7 @@ import java.util.logging.Logger;
 public abstract class JavaPlugin {
     
     private Logger logger;
+    private Map<String, PluginCommand> commands = new HashMap<>();
     
     public JavaPlugin() {
         this.logger = Logger.getLogger(this.getClass().getName());
@@ -34,5 +38,20 @@ public abstract class JavaPlugin {
      */
     public Logger getLogger() {
         return logger;
+    }
+    
+    /**
+     * Gets a command registered to this plugin.
+     * @param name Name of the command to retrieve
+     * @return PluginCommand if found, otherwise null
+     */
+    public PluginCommand getCommand(String name) {
+        PluginCommand command = commands.get(name);
+        if (command == null) {
+            // Create command if not exists (simulated behavior)
+            command = new PluginCommand(name);
+            commands.put(name, command);
+        }
+        return command;
     }
 }

@@ -1,7 +1,7 @@
 package com.lowcjm.chatplugin.demo;
 
 import com.lowcjm.chatplugin.ChatPlugin;
-import com.lowcjm.chatplugin.commands.MuteChatCommand.CommandSender;
+import org.bukkit.command.CommandSender;
 import com.lowcjm.chatplugin.listeners.ChatListener;
 import com.lowcjm.chatplugin.managers.ChatManager.SimulatedPlayer;
 import com.lowcjm.chatplugin.managers.FilterManager;

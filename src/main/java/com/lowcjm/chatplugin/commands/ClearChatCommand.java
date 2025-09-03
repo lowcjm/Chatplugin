@@ -1,13 +1,14 @@
 package com.lowcjm.chatplugin.commands;
 
 import com.lowcjm.chatplugin.ChatPlugin;
-import com.lowcjm.chatplugin.commands.MuteChatCommand.CommandSender;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 
 /**
  * Command handler for /clearchat
- * In production, this would implement CommandExecutor from Bukkit API
  */
-public class ClearChatCommand {
+public class ClearChatCommand implements CommandExecutor {
     
     private final ChatPlugin plugin;
     
@@ -15,8 +16,8 @@ public class ClearChatCommand {
         this.plugin = plugin;
     }
     
-    // In production: public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    public boolean handleCommand(CommandSender sender, String[] args) {
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("chatplugin.clearchat")) {
             String noPermMessage = translateColorCodes(
                 plugin.getConfig().getString("messages.no-permission", "&cYou don't have permission to use this command."));
@@ -28,6 +29,11 @@ public class ClearChatCommand {
         sender.sendMessage("§aChat has been cleared for all players.");
         
         return true;
+    }
+    
+    // Legacy method for demo compatibility
+    public boolean handleCommand(CommandSender sender, String[] args) {
+        return onCommand(sender, null, "clearchat", args);
     }
     
     private String translateColorCodes(String text) {

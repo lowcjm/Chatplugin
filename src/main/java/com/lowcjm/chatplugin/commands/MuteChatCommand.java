@@ -1,15 +1,17 @@
 package com.lowcjm.chatplugin.commands;
 
 import com.lowcjm.chatplugin.ChatPlugin;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * Command handler for /mutechat
- * In production, this would implement CommandExecutor and TabCompleter from Bukkit API
  */
-public class MuteChatCommand {
+public class MuteChatCommand implements CommandExecutor {
     
     private final ChatPlugin plugin;
     
@@ -17,8 +19,8 @@ public class MuteChatCommand {
         this.plugin = plugin;
     }
     
-    // In production: public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    public boolean handleCommand(CommandSender sender, String[] args) {
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("chatplugin.mutechat")) {
             String noPermMessage = translateColorCodes(
                 plugin.getConfig().getString("messages.no-permission", "&cYou don't have permission to use this command."));
@@ -75,6 +77,11 @@ public class MuteChatCommand {
         return true;
     }
     
+    // Legacy method for demo compatibility
+    public boolean handleCommand(CommandSender sender, String[] args) {
+        return onCommand(sender, null, "mutechat", args);
+    }
+    
     // In production: public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
     public List<String> handleTabComplete(String[] args) {
         if (args.length == 1) {
@@ -86,12 +93,5 @@ public class MuteChatCommand {
     private String translateColorCodes(String text) {
         if (text == null) return "";
         return text.replace("&", "§");
-    }
-    
-    // Simulated CommandSender interface
-    public interface CommandSender {
-        void sendMessage(String message);
-        boolean hasPermission(String permission);
-        String getName();
     }
 }

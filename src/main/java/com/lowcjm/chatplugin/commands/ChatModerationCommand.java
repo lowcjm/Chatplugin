@@ -1,16 +1,17 @@
 package com.lowcjm.chatplugin.commands;
 
 import com.lowcjm.chatplugin.ChatPlugin;
-import com.lowcjm.chatplugin.commands.MuteChatCommand.CommandSender;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * Command handler for /chatmoderation
- * In production, this would implement CommandExecutor and TabCompleter from Bukkit API
  */
-public class ChatModerationCommand {
+public class ChatModerationCommand implements CommandExecutor {
     
     private final ChatPlugin plugin;
     
@@ -18,8 +19,8 @@ public class ChatModerationCommand {
         this.plugin = plugin;
     }
     
-    // In production: public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    public boolean handleCommand(CommandSender sender, String[] args) {
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("chatplugin.toggle")) {
             String noPermMessage = translateColorCodes(
                 plugin.getConfig().getString("messages.no-permission", "&cYou don't have permission to use this command."));
@@ -87,6 +88,11 @@ public class ChatModerationCommand {
         
         sender.sendMessage("§cUsage: /chatmoderation [on|off|status|reload]");
         return true;
+    }
+    
+    // Legacy method for demo compatibility
+    public boolean handleCommand(CommandSender sender, String[] args) {
+        return onCommand(sender, null, "chatmoderation", args);
     }
     
     // In production: public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
