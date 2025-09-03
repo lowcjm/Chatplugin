@@ -3,12 +3,15 @@ package com.lowcjm.chatplugin.listeners;
 import com.lowcjm.chatplugin.ChatPlugin;
 import com.lowcjm.chatplugin.managers.FilterManager;
 import com.lowcjm.chatplugin.managers.ChatManager.SimulatedPlayer;
+import org.bukkit.event.Listener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 
 /**
  * Chat listener for intercepting and filtering chat messages
  * In production, this would implement Bukkit's Listener interface and use @EventHandler
  */
-public class ChatListener {
+public class ChatListener implements Listener {
     
     private final ChatPlugin plugin;
     
@@ -18,6 +21,7 @@ public class ChatListener {
     
     // In production, this would be annotated with @EventHandler(priority = EventPriority.HIGHEST)
     // and take AsyncPlayerChatEvent as parameter
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerChat(SimulatedPlayer player, String message, ChatEventWrapper event) {
         // Check if player can chat (bypass permission, chat muted, player muted)
         if (!plugin.getChatManager().canPlayerChat(player)) {
